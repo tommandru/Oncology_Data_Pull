@@ -1,5 +1,6 @@
 library(glue)
 library(odbc)
 library(DBI)
+library(pool)
 
-con <- dbConnect(odbc::odbc(), "OAO Cloud DB", timeout = 30)
+con <- dbPool(drv = odbc::odbc(), dsn = "OAO Cloud DB", timeout = 30)
