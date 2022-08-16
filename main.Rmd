@@ -1,3 +1,11 @@
+---
+title: "main"
+output: html_document
+date: '2022-08-16'
+---
+
+
+```{r cars}
 library(glue)
 library(odbc)
 library(tidyverse)
@@ -51,3 +59,6 @@ poolWithTransaction(con, function(conn) {
   dbExecute(conn,update_query)
   
 })
+
+```
+
