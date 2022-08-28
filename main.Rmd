@@ -55,7 +55,7 @@ FROM( \\
 WHERE h.Counts = 1")
 
 poolWithTransaction(con, function(conn) {
-if(dbExistsTable("ONCOLOGY_ACCESS")) {
+if(dbExistsTable(conn, "ONCOLOGY_ACCESS")) {
         dbExecute(conn,drop_query)
   }
   dbExecute(conn,update_query)
