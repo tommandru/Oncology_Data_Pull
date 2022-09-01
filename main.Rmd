@@ -36,7 +36,7 @@ FROM( \\
         TO_CHAR(a.APPT_DTTM, 'DY') AS APPT_DAY, \\
         TO_CHAR(a.APPT_DTTM, 'MON') AS Appt_Month, \\
         TO_CHAR(a.APPT_DTTM, 'yyyy-mm') AS Appt_Month_Year, \\
-        trunc(TO_DATE(a.APPT_DTTM, 'yyyy-mm-dd HH24:MI:SS')) AS Appt_Date_Year, \\
+        trunc(a.APPT_DTTM) AS Appt_Date_Year, \\
         a.LOS_CODE, b.*, c.ASSOCIATIONLISTA, c.ASSOCIATIONLISTB, c.ASSOCIATIONLISTT, \\
         c.INPERSONVSTELE, d.DISEASE_GROUP, e.*, \\
         TRIM(TRAILING FROM REGEXP_REPLACE(a.PROV_NAME_WID, '{reg_exp}', '')) AS Provider \\
