@@ -38,7 +38,7 @@ FROM( \\
         TO_CHAR(a.APPT_DTTM, 'yyyy-mm') AS Appt_Month_Year, \\
         trunc(a.APPT_DTTM) AS Appt_Date_Year, \\
         a.LOS_CODE, b.*, c.ASSOCIATIONLISTA, c.ASSOCIATIONLISTB, c.ASSOCIATIONLISTT, \\
-        c.INPERSONVSTELE, d.DISEASE_GROUP, e.*, \\
+        c.INPERSONVSTELE, d.DISEASE_GROUP, d.DISEASE_GROUP_B AS DISEASE_GROUP_DETAIL, e.*, \\
         TRIM(TRAILING FROM REGEXP_REPLACE(a.PROV_NAME_WID, '{reg_exp}', '')) AS Provider \\
         FROM MV_DM_PATIENT_ACCESS a \\
                             INNER JOIN ONCOLOGY_DEPARTMENT_GROUPINGS b on a.DEPARTMENT_ID = b.DEPARTMENT_ID and \\
