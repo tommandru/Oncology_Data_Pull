@@ -13,6 +13,7 @@ library(DBI)
 library(pool)
 
 con <- dbPool(drv = odbc::odbc(), dsn = "OAO Cloud DB", timeout = 30)
+print("con")
 
 drop_query <- glue("DROP TABLE ONCOLOGY_ACCESS")
 
@@ -64,6 +65,6 @@ if(dbExistsTable(conn, "ONCOLOGY_ACCESS")) {
   dbExecute(conn,oncology_index)
   
 })
-
+print("pool")
 ```
 
