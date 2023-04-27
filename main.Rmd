@@ -12,7 +12,8 @@ library(tidyverse)
 library(DBI)
 library(pool)
 
-con <- dbPool(drv = odbc::odbc(), dsn = "OAO Cloud DB", timeout = 30)
+#con <- dbPool(drv = odbc::odbc(), dsn = "OAO Cloud DB", timeout = 30)
+conn <- dbConnect(drv = odbc(), "OAO Cloud DB", timeout = 30)
 print("con")
 
 drop_query <- glue("DROP TABLE ONCOLOGY_ACCESS")
@@ -57,13 +58,19 @@ WHERE h.Counts = 1")
 
 oncology_index <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (SITE, DEPARTMENT_NAME, DX_GROUPER, APPT_DTTM, APPT_DAY)")
 
-poolWithTransaction(con, function(conn) {
-if(dbExistsTable(conn, "ONCOLOGY_ACCESS")) {
-        dbExecute(conn,drop_query)
+tryCatch({
+dbBegin(con)
+if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
+        dbExecute(con,drop_query)
   }
-  dbExecute(conn,update_query)
-  dbExecute(conn,oncology_index)
+  dbExecute(con,update_query)
+  dbExecute(con,oncology_index)
   
+},
+ error = function(err){
+    print(err)
+    dbRollback(con)
+    dbDisconnect(con)
 })
 print("pool")
 ```
