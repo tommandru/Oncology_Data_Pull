@@ -18,11 +18,11 @@ print("con")
 
 drop_query <- glue("DROP TABLE ONCOLOGY_ACCESS")
 
-date_1 <- "2021-01-01"
+date_1 <- "2023-08-01"
 date_2 <- Sys.Date() - 1
 reg_exp <- "\\[(.*?)\\]"
 
-update_query <- glue("CREATE TABLE ONCOLOGY_ACCESS AS 
+update_query <- glue("CREATE TABLE ONCOLOGY_ACCESS_TEST AS 
 SELECT h.*, count(*) over () totalRows
 FROM( 
 SELECT g.*, j.RACE_GROUPER, j.RACE_GROUPER_DETAIL, m.ETHNICITY_GROUPER,
@@ -41,7 +41,7 @@ FROM(
         trunc(a.APPT_DTTM) AS Appt_Date_Year, 
         a.LOS_CODE, b.*, c.ASSOCIATIONLISTA, c.ASSOCIATIONLISTB, c.ASSOCIATIONLISTT, 
         a.PAT_ID,
-        c.INPERSONVSTELE, d.DISEASE_GROUP, d.DISEASE_GROUP_B AS DISEASE_GROUP_DETAIL, e.*, i.ETHNICITY, i.RACE,
+        c.INPERSONVSTELE, d.DISEASE_GROUP, d.DISEASE_GROUP_B AS DISEASE_GROUP_DETAIL, e.*, i.ETHNICITY, i.RACE, i.MYCHART_STATUS,
         TRIM(TRAILING FROM REGEXP_REPLACE(a.PROV_NAME_WID, '{reg_exp}', '')) AS Provider 
         FROM MV_DM_PATIENT_ACCESS a 
                             INNER JOIN ONCOLOGY_DEPARTMENT_GROUPINGS b on a.DEPARTMENT_ID = b.DEPARTMENT_ID and 
@@ -55,12 +55,21 @@ FROM(
                                                                     WHERE f.LOS_CODE IS NULL 
                                                                     
         ) g 
-        LEFT JOIN ONCOLOGY_RACE_GROUPER j on g.RACE = j.RACE
-        LEFT JOIN ONCOLOGY_ETHNICITY_GROUPER m on g.ETHNICITY = m.ETHNIC_BACKGROUND
+        LEFT JOIN ONCOLOGY_RACE_GROUPER j on LOWER(g.RACE) = LOWER(j.RACE)
+        LEFT JOIN ONCOLOGY_ETHNICITY_GROUPER m on LOWER(g.ETHNICITY) = LOWER(m.ETHNIC_BACKGROUND)
     ) h 
 WHERE h.Counts = 1")
 
 oncology_index <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (SITE, DEPARTMENT_NAME, DX_GROUPER, APPT_DTTM, APPT_DAY)")
+
+update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS_TEST
+   SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'UNKNOWN')
+ WHERE ETHNICITY IS NULL;")
+
+update_columns_race <- glue("UPDATE ONCOLOGY_ACCESS_TEST
+   SET RACE_GROUPER = NVL(RACE_GROUPER, 'BLANK/UNKNOWN'),
+   SET RACE_GROUPER_DETAIL = NVL(RACE_GROUPER_DETAIL, 'UNKNOWN')
+ WHERE RACE IS NULL")
 
 tryCatch({
 dbBegin(con)
@@ -69,6 +78,8 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   }
   dbExecute(con,update_query)
   dbExecute(con,oncology_index)
+  dbExecute(con,update_columns_ethnicity)
+  #dbExecute(con,update_columns_race)
   
 },
  error = function(err){
