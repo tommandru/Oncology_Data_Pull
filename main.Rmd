@@ -22,7 +22,7 @@ date_1 <- "2023-08-01"
 date_2 <- Sys.Date() - 1
 reg_exp <- "\\[(.*?)\\]"
 
-update_query <- glue("CREATE TABLE ONCOLOGY_ACCESS_TEST AS 
+update_query <- glue("CREATE TABLE ONCOLOGY_ACCESS AS 
 SELECT h.*, count(*) over () totalRows
 FROM( 
 SELECT g.*, j.RACE_GROUPER, j.RACE_GROUPER_DETAIL, m.ETHNICITY_GROUPER,
@@ -62,11 +62,11 @@ WHERE h.Counts = 1")
 
 oncology_index <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (SITE, DEPARTMENT_NAME, DX_GROUPER, APPT_DTTM, APPT_DAY)")
 
-update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS_TEST
+update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS
    SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'UNKNOWN')
  WHERE ETHNICITY IS NULL;")
 
-update_columns_race <- glue("UPDATE ONCOLOGY_ACCESS_TEST
+update_columns_race <- glue("UPDATE ONCOLOGY_ACCESS
    SET RACE_GROUPER = NVL(RACE_GROUPER, 'BLANK/UNKNOWN'),
    SET RACE_GROUPER_DETAIL = NVL(RACE_GROUPER_DETAIL, 'UNKNOWN')
  WHERE RACE IS NULL")
