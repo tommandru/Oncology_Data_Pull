@@ -68,6 +68,10 @@ update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS
    SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'BLANK')
  WHERE ETHNICITY IS NULL;")
 
+update_columns_race <- glue("UPDATE ONCOLOGY_ACCESS
+   SET RACE = NVL(RACE, 'BLANK')
+ WHERE RACE IS NULL")
+
 update_columns_race_grouper <- glue("UPDATE ONCOLOGY_ACCESS
    SET RACE_GROUPER = NVL(RACE_GROUPER, 'BLANK')
  WHERE RACE IS NULL")
@@ -87,6 +91,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   #dbExecute(con,update_columns_ethnicity)
   dbExecute(con,update_columns_race_grouper)
   dbExecute(con,update_columns_race_detail)
+  dbExecute(con,update_columns_race)
 
   
 },
