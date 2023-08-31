@@ -65,12 +65,15 @@ oncology_index <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (S
 oncology_index_date <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (APPT_DTTM, DEPARTMENT_NAME)")
 
 update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS
-   SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'UNKNOWN')
+   SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'BLANK')
  WHERE ETHNICITY IS NULL;")
 
-update_columns_race <- glue("UPDATE ONCOLOGY_ACCESS
-   SET RACE_GROUPER = NVL(RACE_GROUPER, 'BLANK/UNKNOWN'),
-   SET RACE_GROUPER_DETAIL = NVL(RACE_GROUPER_DETAIL, 'UNKNOWN')
+update_columns_race_grouper <- glue("UPDATE ONCOLOGY_ACCESS
+   SET RACE_GROUPER = NVL(RACE_GROUPER, 'BLANK')
+ WHERE RACE IS NULL")
+
+update_columns_race_detail <- glue("UPDATE ONCOLOGY_ACCESS
+   SET RACE_GROUPER_DETAIL = NVL(RACE_GROUPER_DETAIL, 'BLANK')
  WHERE RACE IS NULL")
 
 tryCatch({
@@ -82,7 +85,9 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,oncology_index)
     dbExecute(con,oncology_index_date)
   #dbExecute(con,update_columns_ethnicity)
-  #dbExecute(con,update_columns_race)
+  dbExecute(con,update_columns_race_grouper)
+  dbExecute(con,update_columns_race_detail)
+
   
 },
  error = function(err){
