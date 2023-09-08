@@ -62,7 +62,7 @@ FROM(
 WHERE h.Counts = 1")
 
 oncology_index <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (SITE, DEPARTMENT_NAME, DX_GROUPER, APPT_DTTM, APPT_DAY)")
-oncology_index_date <- glue("CREATE index oncology_filter_index on ONCOLOGY_ACCESS (APPT_DTTM, DEPARTMENT_NAME)")
+oncology_index_date <- glue("CREATE index oncology_filter_index_appt_dttm on ONCOLOGY_ACCESS (APPT_DTTM, DEPARTMENT_NAME)")
 
 update_columns_ethnicity <- glue("UPDATE ONCOLOGY_ACCESS
    SET ETHNICITY_GROUPER = NVL(ETHNICITY_GROUPER, 'BLANK')
