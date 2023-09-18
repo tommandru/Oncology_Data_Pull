@@ -98,7 +98,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_columns_race_detail)
   dbExecute(con,update_columns_race)
   dbExecute(con,update_columns_my_chart)
-
+  dbCommit(con)
 
   
 },
