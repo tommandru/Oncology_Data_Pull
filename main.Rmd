@@ -81,6 +81,10 @@ update_columns_race_detail <- glue("UPDATE ONCOLOGY_ACCESS
    SET RACE_GROUPER_DETAIL = NVL(RACE_GROUPER_DETAIL, 'BLANK')
  WHERE RACE IS NULL")
 
+update_columns_my_chart <- glue("UPDATE ONCOLOGY_ACCESS
+   SET MYCHART_STATUS_GROUPER = NVL(MYCHART_STATUS_GROUPER, 'Not Activated')
+ WHERE MYCHART_STATUS IS NULL")
+
 tryCatch({
 dbBegin(con)
 if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
@@ -93,6 +97,8 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_columns_race_grouper)
   dbExecute(con,update_columns_race_detail)
   dbExecute(con,update_columns_race)
+  dbExecute(con,update_columns_my_chart)
+
 
   
 },
