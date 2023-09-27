@@ -94,7 +94,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_query)
   dbExecute(con,oncology_index)
     dbExecute(con,oncology_index_date)
-  #dbExecute(con,update_columns_ethnicity)
+  dbExecute(con,update_columns_ethnicity)
   dbExecute(con,update_columns_race_grouper)
   dbExecute(con,update_columns_race_detail)
   dbExecute(con,update_columns_race)
