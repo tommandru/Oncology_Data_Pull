@@ -86,6 +86,10 @@ update_columns_my_chart <- glue("UPDATE ONCOLOGY_ACCESS
    SET MYCHART_STATUS_GROUPER = NVL(MYCHART_STATUS_GROUPER, 'Not Activated')
  WHERE MYCHART_STATUS IS NULL")
 
+update_columns_ref_provider <- glue("UPDATE ONCOLOGY_ACCESS
+   SET REFERRING_PROVIDER = NVL(REFERRING_PROVIDER, 'Unknown/Blank')
+ WHERE REFERRING_PROVIDER IS NULL")
+
 tryCatch({
 dbBegin(con)
 if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
@@ -99,6 +103,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_columns_race_detail)
   dbExecute(con,update_columns_race)
   dbExecute(con,update_columns_my_chart)
+  dbExecute(con,update_columns_ref_provider)
   dbCommit(con)
 
   
