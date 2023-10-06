@@ -14,7 +14,7 @@ library(pool)
 
 #con <- dbPool(drv = odbc::odbc(), dsn = "OAO Cloud DB tommad01", timeout = 30)
 con <- dbConnect(drv = odbc(), "OAO Cloud DB tommad01", timeout = 30)
-print("con")
+print(con)
 
 drop_query <- glue("DROP TABLE ONCOLOGY_ACCESS")
 
@@ -106,7 +106,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_columns_ref_provider)
   dbCommit(con)
 
-  
+  print("done!)
 },
  error = function(err){
     print(err)
