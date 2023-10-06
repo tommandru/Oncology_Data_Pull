@@ -106,7 +106,7 @@ if(dbExistsTable(con, "ONCOLOGY_ACCESS")) {
   dbExecute(con,update_columns_ref_provider)
   dbCommit(con)
 
-  print("done!)
+  print("done!")
 },
  error = function(err){
     print(err)
